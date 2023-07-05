@@ -4,8 +4,8 @@ public class GestionPharmacie {
 
     // Lire le fichier (donnees en fichier en désordre; chercher les keywords)
     // Entrer les donnees dans les structures
-    //          creer des objets Medicament, puis les rajouter à Stock. quand ya APPROV
-    //          sauvegarder dateObtenue dans une variable DATE
+    //          creer des objets Medicament, puis les rajouter à Stock. quand ya APPROV.
+    //          sauvegarder dateObtenue dans une variable DATE.
     //          si STOCK, output Stock
     //          PRESCRIPTION, extract le nom du medicament - extract quantity du fuchier.
     //          Chercher dans stock en utilisant findClosestExpiryDate. Check si currentDate < Expiry Date
@@ -15,8 +15,8 @@ public class GestionPharmacie {
     //            do necessary outputs of OK and COMMANDE. 
     //              IF COMMANDE, add to RECORD (if RECORD vide => Date courante et OK)
     //       
-    //           au prochain APPROV, juste avant, output RECORD. Juste apres, check Date, deleteAll.  
+    //           au prochain DATE, juste avant, output RECORD. Juste apres, deleteAll.  
     
-    //           
+    //           until EOF
     }
 }
