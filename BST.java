@@ -119,8 +119,56 @@ void deleteKey(UUID uuid) {
         } else {
             return findClosestExpiryDateRec(root.left, name, targetDate, closestNode);
         }
-    }
 
+    }
+     public static void deleteNodesBeforeDate(LocalDate targetDate) {
+            root = deleteNodesBeforeDateRec(root, targetDate);
+        }
+    
+        public static Node deleteNodesBeforeDateRec(Node root, LocalDate targetDate) {
+            if (root == null) {
+                return null;
+            }
+    
+            if (root.key.getDateExpi().compareTo(targetDate) < 0) {
+                root = deleteNormalNode(root, root.key);
+            }
+    
+            root.left = deleteNodesBeforeDateRec(root.left, targetDate);
+            root.right = deleteNodesBeforeDateRec(root.right, targetDate);
+    
+            return root;
+        }
+
+        static Node deleteNormalNode(Node root, Medicament medicament) {
+        if (root == null) {
+            return null;
+        }
+
+        if (medicament.getDateExpi().compareTo(root.key.getDateExpi()) < 0) {
+            root.left = deleteNormalNode(root.left, medicament);
+        } else if (medicament.getDateExpi().compareTo(root.key.getDateExpi()) > 0) {
+            root.right = deleteNormalNode(root.right, medicament);
+        } else {
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            }
+
+            Node minValueNode = findMinValueNode(root.right);
+            root.key = minValueNode.key;
+            root.right = deleteNormalNode(root.right, minValueNode.key);
+        }
+return root;}
+
+ static Node findMinValueNode(Node node) {
+        Node current = node;
+        while (current.left != null) {
+            current = current.left;
+        }
+        return current;
+    }
 
     public static void main(String[] args) {
         BST tree = new BST();
@@ -151,6 +199,12 @@ void deleteKey(UUID uuid) {
        
         Medicament m11 = findClosestExpiryDate("Med4", LocalDate.of(2023, 7, 3));
         System.out.println(m11.getNom() + m11.getStock() + m11.getDateExpi());
+
+        deleteNodesBeforeDate(LocalDate.of(2023, 7, 3));
+
+        
+        System.out.println("Inorder traversal (sorted by expiration date):");
+        tree.inorder();
         
     }
 

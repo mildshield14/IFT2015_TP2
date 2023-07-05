@@ -11,8 +11,12 @@ public class GestionPharmacie {
     //          Chercher dans stock en utilisant findClosestExpiryDate. Check si currentDate < Expiry Date
     //          va retourner un objet Medicament; check quantity du Medicament et quantite du Client et 
     //            si same OK, quaMed > quaPres ok, else COMMANDE
-    //            if OK, remove quantity/ node in binary tree using deleteKey(UUID)          
+    //            if OK, remove quantity/ node in binary tree using deleteKey(UUID)    
+    //            do necessary outputs of OK and COMMANDE. 
+    //              IF COMMANDE, add to RECORD (if RECORD vide => Date courante et OK)
+    //       
+    //           au prochain APPROV, juste avant, output RECORD. Juste apres, check Date, deleteAll.  
     
-    //.           
+    //           
     }
 }
