@@ -1,4 +1,7 @@
-class Client{
+import java.util.ArrayList;
+import java.util.UUID;
+
+class ClientPrescription{
 
     private int repetition;
     private ArrayList<Medicament> medicaments;
@@ -6,7 +9,6 @@ class Client{
 
     public Client(int repetition, ArrayList<Medicament> medicaments, UUID idClient) {
         this.repetition = repetition;
-        this.
     }
 
     

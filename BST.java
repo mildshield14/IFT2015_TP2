@@ -93,24 +93,6 @@ void deleteKey(UUID uuid) {
 
     }
 
-    public static void main(String[] args) {
-        BST tree = new BST();
-
-        Medicament m1 = new Medicament("Med1", UUID.randomUUID(), LocalDate.of(2023, 7, 1));
-        Medicament m2 = new Medicament("Med2", UUID.randomUUID(), LocalDate.of(2023, 7, 2));
-        Medicament m3 = new Medicament("Med3", UUID.randomUUID(), LocalDate.of(2023, 7, 3));
-        Medicament m4 = new Medicament("Med4", UUID.randomUUID(), LocalDate.of(2023, 7, 4));
-        Medicament m5 = new Medicament("Med5", UUID.randomUUID(), LocalDate.of(2023, 7, 5));
-
-        tree.insert(m3);
-        tree.insert(m1);
-        tree.insert(m4);
-        tree.insert(m2);
-        tree.insert(m5);
-
-        System.out.println("Inorder traversal (sorted by expiration date):");
-        tree.inorder();
-    }
 
 
 }
