@@ -1,5 +1,6 @@
+
 class AllClients{
 
-    private ArrayList<ClientPrescription>;
+    private ArrayList<ClientPrescription> clients;
 
 }
