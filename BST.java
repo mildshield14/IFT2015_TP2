@@ -17,7 +17,7 @@ class BST {
         }
      
     // BST root node 
-    public Node root; 
+    public static Node root; 
   
    // Constructor for BST =>initial empty tree
     public BST(){ 
@@ -93,6 +93,66 @@ void deleteKey(UUID uuid) {
 
     }
 
+    static Medicament findClosestExpiryDate(String name, LocalDate currentDate) {
+
+        Node closestNode = findClosestExpiryDateRec(root, name, currentDate, null);
+        if (closestNode != null) {
+            return closestNode.key;
+        } else {
+            return null;
+        }
+    }
+
+    static Node findClosestExpiryDateRec(Node root, String name, LocalDate targetDate, Node closestNode) {
+        if (root == null) {
+            return closestNode;
+        }
+
+        if (root.key.getNom().equals(name)) {
+            if (closestNode == null || root.key.getDateExpi().compareTo(closestNode.key.getDateExpi()) < 0) {
+                closestNode = root;
+            }
+        }
+
+        if (root.key.getNom().compareTo(name) < 0) {
+            return findClosestExpiryDateRec(root.right, name, targetDate, closestNode);
+        } else {
+            return findClosestExpiryDateRec(root.left, name, targetDate, closestNode);
+        }
+    }
+
+
+    public static void main(String[] args) {
+        BST tree = new BST();
+
+        Medicament m1 = new Medicament("Med1", UUID.randomUUID(), LocalDate.of(2023, 7, 1),100);
+        Medicament m2 = new Medicament("Med2", UUID.randomUUID(), LocalDate.of(2023, 7, 2),100);
+        Medicament m3 = new Medicament("Med3", UUID.randomUUID(), LocalDate.of(2023, 7, 3),100);
+        Medicament m4 = new Medicament("Med4", UUID.randomUUID(), LocalDate.of(2023, 7, 4),200);
+        Medicament m5 = new Medicament("Med5", UUID.randomUUID(), LocalDate.of(2023, 7, 5),100);
+ Medicament m6 = new Medicament("Med4", UUID.randomUUID(), LocalDate.of(2023, 7, 5),350);
+      Medicament m7 = new Medicament("Med4", UUID.randomUUID(), LocalDate.of(2023, 7, 10),450);
+     
+        tree.insert(m3);
+        tree.insert(m1);
+        tree.insert(m4);
+        tree.insert(m2);
+        tree.insert(m5);
+
+        System.out.println("Inorder traversal (sorted by expiration date):");
+        tree.inorder();
+
+        Medicament m = findClosestExpiryDate("Med4", LocalDate.of(2023, 7, 3));
+        System.out.println(m.getNom() + m.getStock() + m.getDateExpi());
+
+        Medicament newm = new Medicament (m.getNom(), m.getUUID(),m.getDateExpi(), m.getStock()-50);
+        tree.deleteKey(m.getUUID());
+        tree.insert(newm);
+       
+        Medicament m11 = findClosestExpiryDate("Med4", LocalDate.of(2023, 7, 3));
+        System.out.println(m11.getNom() + m11.getStock() + m11.getDateExpi());
+        
+    }
 
 
 }
