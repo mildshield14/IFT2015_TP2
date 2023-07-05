@@ -36,7 +36,7 @@ public Node insertKey(Node root, Medicament key) {
 
     if (key.getDateExpi().compareTo(root.key.getDateExpi()) < 0)
         root.left = insertKey(root.left, key);
-    else if (key.getDateExpi().compareTo(root.key.getDateExpi()) > 0)
+    else if (key.getDateExpi().compareTo(root.key.getDateExpi()) >= 0)
         root.right = insertKey(root.right, key);
 
     return root;
@@ -49,7 +49,7 @@ void inorder() {
     void inorderRec(Node root) {
         if (root != null) {
             inorderRec(root.left);
-            System.out.println(root.key.getNom());
+            System.out.println(root.key.getNom() + " " + root.key.getDateExpi() + " " + root.key.getStock());
             inorderRec(root.right);
         }
     }
@@ -133,9 +133,10 @@ void deleteKey(UUID uuid) {
             if (root.key.getDateExpi().compareTo(targetDate) < 0) {
                 root = deleteNormalNode(root, root.key);
             }
-    
+            if (root!= null){
             root.left = deleteNodesBeforeDateRec(root.left, targetDate);
             root.right = deleteNodesBeforeDateRec(root.right, targetDate);
+            }
     
             return root;
         }
@@ -160,7 +161,8 @@ void deleteKey(UUID uuid) {
             root.key = minValueNode.key;
             root.right = deleteNormalNode(root.right, minValueNode.key);
         }
-return root;}
+        return root;
+    }
 
  static Node findMinValueNode(Node node) {
         Node current = node;
@@ -178,29 +180,35 @@ return root;}
         Medicament m3 = new Medicament("Med3", UUID.randomUUID(), LocalDate.of(2023, 7, 3),100);
         Medicament m4 = new Medicament("Med4", UUID.randomUUID(), LocalDate.of(2023, 7, 4),200);
         Medicament m5 = new Medicament("Med5", UUID.randomUUID(), LocalDate.of(2023, 7, 5),100);
- Medicament m6 = new Medicament("Med4", UUID.randomUUID(), LocalDate.of(2023, 7, 5),350);
-      Medicament m7 = new Medicament("Med4", UUID.randomUUID(), LocalDate.of(2023, 7, 10),450);
+        Medicament m6 = new Medicament("Med4", UUID.randomUUID(), LocalDate.of(2023, 7, 5),350);
+        Medicament m7 = new Medicament("Med4", UUID.randomUUID(), LocalDate.of(2023, 7, 10),450);
      
-        tree.insert(m3);
-        tree.insert(m1);
-        tree.insert(m4);
-        tree.insert(m2);
         tree.insert(m5);
+        tree.insert(m3);
+        tree.insert(m4);
+        tree.insert(m1);
+        
+        tree.insert(m2);
+        
+        tree.insert(m6);
+        tree.insert(m7);
 
         System.out.println("Inorder traversal (sorted by expiration date):");
         tree.inorder();
 
         Medicament m = findClosestExpiryDate("Med4", LocalDate.of(2023, 7, 3));
-        System.out.println(m.getNom() + m.getStock() + m.getDateExpi());
+        System.out.println(m.getNom() + " " + m.getStock() + " " + m.getDateExpi());
 
         Medicament newm = new Medicament (m.getNom(), m.getUUID(),m.getDateExpi(), m.getStock()-50);
         tree.deleteKey(m.getUUID());
+        System.gc();
         tree.insert(newm);
-       
-        Medicament m11 = findClosestExpiryDate("Med4", LocalDate.of(2023, 7, 3));
-        System.out.println(m11.getNom() + m11.getStock() + m11.getDateExpi());
-
-        deleteNodesBeforeDate(LocalDate.of(2023, 7, 3));
+        System.gc();
+        Medicament m11 = new Medicament("",UUID.randomUUID(),LocalDate.of(2023, 7, 1),100);
+        m11 = findClosestExpiryDate("Med4", LocalDate.of(2023, 7, 3));
+        System.out.println(m11.getNom() + " " + m11.getStock() + " " + m11.getDateExpi());
+        tree.inorder();
+        deleteNodesBeforeDate(LocalDate.of(2023, 7, 5));
 
         
         System.out.println("Inorder traversal (sorted by expiration date):");
