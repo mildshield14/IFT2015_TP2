@@ -1,12 +1,18 @@
 import java.util.UUID;
 import java.time.LocalDate;
 
-class Medicament{
+class Medicament implements Comparable<Medicament> {
     private String nom;
     private UUID uuid;
     private LocalDate dateExpi;
     private int stock;
 
+    @Override
+    public int compareTo(Medicament m) {
+
+        return this.uuid.compareTo(m.getUUID());
+
+    }
    public Medicament(String nom, UUID uuid, LocalDate dateExpi, int stock){
         this.nom=nom;
         this.uuid=uuid;
@@ -31,6 +37,5 @@ class Medicament{
     return uuid;
    }
 
- 
-
 }
+
