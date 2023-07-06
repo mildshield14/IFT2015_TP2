@@ -3,46 +3,46 @@
 import java.time.LocalDate;
 import java.util.UUID;
 
-class BST { 
+class BST {
     //node class that defines BST node
-    class Node { 
-        
-            Medicament key;
-            Node left, right;
-    
-            public Node(Medicament key) {
-                this.key = key;
-                left = right = null;
-            }
+    class Node {
+
+        Medicament key;
+        Node left, right;
+
+        public Node(Medicament key) {
+            this.key = key;
+            left = right = null;
         }
-     
+    }
+
     // BST root node 
-    public static Node root; 
-  
-   // Constructor for BST =>initial empty tree
-    public BST(){ 
-        root = null; 
-    } 
+    public static Node root;
 
-public void insert(Medicament key){
-    root = insertKey(root,key);
-}
+    // Constructor for BST =>initial empty tree
+    public BST(){
+        root = null;
+    }
 
-public Node insertKey(Node root, Medicament key) {
-    if (root == null) {
-        root = new Node(key);
+    public void insert(Medicament key){
+        root = insertKey(root,key);
+    }
+
+    public Node insertKey(Node root, Medicament key) {
+        if (root == null) {
+            root = new Node(key);
+            return root;
+        }
+
+        if (key.getDateExpi().compareTo(root.key.getDateExpi()) < 0)
+            root.left = insertKey(root.left, key);
+        else if (key.getDateExpi().compareTo(root.key.getDateExpi()) >= 0)
+            root.right = insertKey(root.right, key);
+
         return root;
     }
 
-    if (key.getDateExpi().compareTo(root.key.getDateExpi()) < 0)
-        root.left = insertKey(root.left, key);
-    else if (key.getDateExpi().compareTo(root.key.getDateExpi()) >= 0)
-        root.right = insertKey(root.right, key);
-
-    return root;
-}
-
-void inorder() {
+    void inorder() {
         inorderRec(root);
     }
 
@@ -55,9 +55,9 @@ void inorder() {
     }
 
 
-void deleteKey(UUID uuid) {
-    root = deleteRec(root, uuid);
-}
+    void deleteKey(UUID uuid) {
+        root = deleteRec(root, uuid);
+    }
 
     Node deleteRec(Node root, UUID uuid) {
         if (root == null)
@@ -121,27 +121,27 @@ void deleteKey(UUID uuid) {
         }
 
     }
-     public static void deleteNodesBeforeDate(LocalDate targetDate) {
-            root = deleteNodesBeforeDateRec(root, targetDate);
-        }
-    
-        public static Node deleteNodesBeforeDateRec(Node root, LocalDate targetDate) {
-            if (root == null) {
-                return null;
-            }
-    
-            if (root.key.getDateExpi().compareTo(targetDate) < 0) {
-                root = deleteNormalNode(root, root.key);
-            }
-            if (root!= null){
-            root.left = deleteNodesBeforeDateRec(root.left, targetDate);
-            root.right = deleteNodesBeforeDateRec(root.right, targetDate);
-            }
-    
-            return root;
+    public static void deleteNodesBeforeDate(LocalDate targetDate) {
+        root = deleteNodesBeforeDateRec(root, targetDate);
+    }
+
+    public static Node deleteNodesBeforeDateRec(Node root, LocalDate targetDate) {
+        if (root == null) {
+            return null;
         }
 
-        static Node deleteNormalNode(Node root, Medicament medicament) {
+        if (root.key.getDateExpi().compareTo(targetDate) < 0) {
+            root = deleteNormalNode(root, root.key);
+        }
+        if (root!= null){
+            root.left = deleteNodesBeforeDateRec(root.left, targetDate);
+            root.right = deleteNodesBeforeDateRec(root.right, targetDate);
+        }
+
+        return root;
+    }
+
+    static Node deleteNormalNode(Node root, Medicament medicament) {
         if (root == null) {
             return null;
         }
@@ -164,12 +164,23 @@ void deleteKey(UUID uuid) {
         return root;
     }
 
- static Node findMinValueNode(Node node) {
+    static Node findMinValueNode(Node node) {
         Node current = node;
         while (current.left != null) {
             current = current.left;
         }
         return current;
+    }
+
+    public int Size(Node node) {
+        if (node==null) {
+            return 0;
+        }
+        else { return (Size(node.left)+1 + Size(node.right)); }
+    }
+
+    public int Size1() {
+        return Size(root);
     }
 
     public static void main(String[] args) {
@@ -182,14 +193,14 @@ void deleteKey(UUID uuid) {
         Medicament m5 = new Medicament("Med5", UUID.randomUUID(), LocalDate.of(2023, 7, 5),100);
         Medicament m6 = new Medicament("Med4", UUID.randomUUID(), LocalDate.of(2023, 7, 5),350);
         Medicament m7 = new Medicament("Med4", UUID.randomUUID(), LocalDate.of(2023, 7, 10),450);
-     
+
         tree.insert(m5);
         tree.insert(m3);
         tree.insert(m4);
         tree.insert(m1);
-        
+
         tree.insert(m2);
-        
+
         tree.insert(m6);
         tree.insert(m7);
 
@@ -199,22 +210,31 @@ void deleteKey(UUID uuid) {
         Medicament m = findClosestExpiryDate("Med4", LocalDate.of(2023, 7, 3));
         System.out.println(m.getNom() + " " + m.getStock() + " " + m.getDateExpi());
 
-        Medicament newm = new Medicament (m.getNom(), m.getUUID(),m.getDateExpi(), m.getStock()-50);
-        tree.deleteKey(m.getUUID());
+       // Medicament newm = new Medicament (m.getNom(), m.getUUID(),m.getDateExpi(), m.getStock()-50);
+        //Medicament newm1 = new Medicament (m1.getNom(), m1.getUUID(),m1.getDateExpi(), m1.getStock()-50);
+        //tree.deleteKey(m.getUUID());
+        //tree.deleteKey(m1.getUUID());
         System.gc();
-        tree.insert(newm);
+        //tree.insert(newm);
+        //tree.insert(newm1);
         System.gc();
-        Medicament m11 = new Medicament("",UUID.randomUUID(),LocalDate.of(2023, 7, 1),100);
-        m11 = findClosestExpiryDate("Med4", LocalDate.of(2023, 7, 3));
-        System.out.println(m11.getNom() + " " + m11.getStock() + " " + m11.getDateExpi());
+        //Medicament m11 = new Medicament("",UUID.randomUUID(),LocalDate.of(2023, 7, 1),100);
+        //m11 = findClosestExpiryDate("Med4", LocalDate.of(2023, 7, 3));
+        //System.out.println(m11.getNom() + " " + m11.getStock() + " " + m11.getDateExpi());
+        int size = tree.Size1();
         tree.inorder();
-        deleteNodesBeforeDate(LocalDate.of(2023, 7, 5));
+        for (int i=0; i<size*size; i++) {
+            deleteNodesBeforeDate(LocalDate.of(2023, 7, 3));
+        }
+        /*deleteNodesBeforeDate(LocalDate.of(2023, 7, 5));
+        deleteNodesBeforeDate(LocalDate.of(2023, 7, 5));*/
 
-        
+
         System.out.println("Inorder traversal (sorted by expiration date):");
         tree.inorder();
-        
+
     }
 
 
 }
+
