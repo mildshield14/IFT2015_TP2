@@ -36,6 +36,9 @@ class Medicament implements Comparable<Medicament> {
    public UUID getUUID(){
     return uuid;
    }
-
+   
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
 }
 
