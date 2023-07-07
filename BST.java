@@ -8,13 +8,16 @@ class BST {
 
    public static  TreeSet<Medicament> tree = new TreeSet<Medicament>();
 
-   
+   public static TreeSet<Medicament> getTree() {
+       return tree;
+   }
+
     public static Medicament findClosest(String nom, LocalDate date) {
         Medicament m = null;
         long closestDiff = Long.MAX_VALUE;
         for (Medicament M : tree) {
             long diff = ChronoUnit.DAYS.between(M.getDateExpi(), date);
-            if (Math.abs(diff)<closestDiff && M.getNom() == nom) {
+            if (Math.abs(diff)<closestDiff && M.getNom().equals(nom)) {
                 closestDiff = Math.abs(diff);
                 m = M;
 
@@ -23,10 +26,11 @@ class BST {
     }
 
 
-    public static void outputStock(){
+    public static void outputStock(LocalDate date){
         for (Medicament med:tree) {
+            if(med.getStock()>0 && med.getDateExpi().isAfter(date)){
             System.out.println(med.getNom() + " " + med.getStock() + " " + med.getDateExpi());
-        }
+        }}
     }
 
     public static void removeMed(Medicament med){
@@ -65,7 +69,7 @@ class BST {
 
         System.out.println("Inorder traversal (sorted by expiration date):");
         //tree.inorder();
-       outputStock();
+       outputStock(LocalDate.of(2023,12,12));
 
         Medicament m = findClosest("Med4", LocalDate.of(2023, 7, 3));
         System.out.println("Output: " + m.getNom() + " " + m.getStock() + " " + m.getDateExpi());
@@ -101,6 +105,7 @@ class BST {
             System.out.println(med.getNom() + " " + med.getStock() + " " + med.getDateExpi());
         }
 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
     }
 }
 
