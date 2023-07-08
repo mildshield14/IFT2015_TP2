@@ -19,26 +19,28 @@ public static LocalDate getCurrentDate() {
     return currentDate;
 }
   public static void stringToMed(String string){
-        String[] theLine = string.split(" ");
-        int num = Integer.parseInt(theLine[1]);
-        String date1 = theLine[2];
-        String[] date2 = date1.split("-");
-        int year = Integer.parseInt(date2[0]);
-        int month = Integer.parseInt(date2[1]);
-        int day = Integer.parseInt(date2[2]);
-        String med = theLine[0];
-        Medicament medicament = new Medicament(med,UUID.randomUUID(),LocalDate.of(year,month,day),num);
+    String[] parts = string.split("\\s+");
+
+for (int i = 0; i < parts.length; i++) {
+    parts[i] = parts[i].trim();
+}
+
+        int num = Integer.parseInt(parts[1]);  
+        LocalDate date = LocalDate.parse(parts[2]); 
+        String med = parts[0];  
+        
+        Medicament medicament = new Medicament(med,UUID.randomUUID(),date,num);
         BST.addMed(medicament);
     }
     public static void readTheThing() {
         BufferedReader reader;
 
         try {
-            reader = new BufferedReader(new FileReader("src/exemple1.txt"));
+            reader = new BufferedReader(new FileReader("exemple1.txt"));
             String line = reader.readLine();
             String instruction = "";
             int i = 1;
-            BufferedWriter writer = new BufferedWriter(new FileWriter("src/erm.txt"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("exemple1+.txt"));
             
             while (line != null) {
 
@@ -114,7 +116,13 @@ public static LocalDate getCurrentDate() {
     }
 public  static String methodPrescription(String line, LocalDate date){
 // TODO; change to \t
-        String[] parts = line.split("\t");
+String[] parts = line.split("\\s+");
+
+
+for (int i = 0; i < parts.length; i++) {
+    parts[i] = parts[i].trim();
+}
+
 
         
         int num1 = Integer.parseInt(parts[1]);  
@@ -135,10 +143,10 @@ public  static String methodPrescription(String line, LocalDate date){
 
             BST.addMed(foundMed);
             outputstring=(med + "\t" + num1 + "\t"+ num2 +"\t"+ "OK");
-        }else if (!((foundMed.getStock()>=total))){
+        }else if (foundMed != null && !((foundMed.getStock()>=total))){
             outputstring=(med + "\t" + num1 + "\t"+ num2 +"\t"+ "COMMANDE");
         } else{
-            System.out.println("Med does not exists??");
+            System.out.println("Med does not exist??");
         }
 
 
