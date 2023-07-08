@@ -135,7 +135,7 @@ for (int i = 0; i < parts.length; i++) {
 
         String outputstring="";
 
-        if (foundMed != null && ((foundMed.getStock()<total))){
+        if (foundMed == null || ((foundMed.getStock()<total))){
             outputstring=(med + "\t" + num1 + "\t"+ num2 +"\t"+ "COMMANDE");
         } else if (foundMed !=null && foundMed.getStock()>=total){
             
@@ -145,8 +145,6 @@ for (int i = 0; i < parts.length; i++) {
 
             BST.addMed(foundMed);
             outputstring=(med + "\t" + num1 + "\t"+ num2 +"\t"+ "OK");
-        }else if (foundMed ==null){
-            System.out.println(med + "\t" + total + " stock needed" +"\t" + " does not exist??");
         }
 
 
