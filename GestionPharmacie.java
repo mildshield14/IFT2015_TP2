@@ -130,12 +130,14 @@ for (int i = 0; i < parts.length; i++) {
         String med = parts[0];  
 
         int total = num1*num2;
-      
+      BST.outputStock();
         Medicament foundMed = BST.findClosest(med,date);
 
         String outputstring="";
 
-       if (foundMed !=null && foundMed.getStock()>=total){
+        if (foundMed != null && ((foundMed.getStock()<total))){
+            outputstring=(med + "\t" + num1 + "\t"+ num2 +"\t"+ "COMMANDE");
+        } else if (foundMed !=null && foundMed.getStock()>=total){
             
             BST.removeMed(foundMed);
 
@@ -143,10 +145,8 @@ for (int i = 0; i < parts.length; i++) {
 
             BST.addMed(foundMed);
             outputstring=(med + "\t" + num1 + "\t"+ num2 +"\t"+ "OK");
-        }else if (foundMed != null && !((foundMed.getStock()>=total))){
-            outputstring=(med + "\t" + num1 + "\t"+ num2 +"\t"+ "COMMANDE");
-        } else{
-            System.out.println("Med does not exist??");
+        }else if (foundMed ==null){
+            System.out.println(med + "\t" + total + " stock needed" +"\t" + " does not exist??");
         }
 
 
@@ -155,6 +155,7 @@ for (int i = 0; i < parts.length; i++) {
                }
 
   public static void main(String[] args) {
+    BST.firsttime();
 readTheThing();
     // Lire le fichier (donnees en fichier en désordre; chercher les keywords)
     // Entrer les donnees dans les structures

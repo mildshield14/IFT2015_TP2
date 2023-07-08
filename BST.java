@@ -10,19 +10,26 @@ import java.util.UUID;
 
 class BST {
 
-    public static  TreeSet<Medicament> tree = new TreeSet<Medicament>();
+    protected static  TreeSet<Medicament> tree;
 
     public static TreeSet<Medicament> getTree() {
         return tree;
     }
 
+    public static void setTree(TreeSet<Medicament> tree) {
+        BST.tree = tree;
+    }
+
+    public static void firsttime (){
+ tree= new TreeSet<Medicament>();
+    }
 
     public static Medicament findClosest(String nom, LocalDate date) {
         Medicament m = null;
         long closestDiff = Long.MAX_VALUE;
         for (Medicament M : tree) {
             long diff = ChronoUnit.DAYS.between(M.getDateExpi(), date);
-            if (Math.abs(diff)<closestDiff && M.getNom() == nom) {
+            if (Math.abs(diff)<=closestDiff && M.getNom().equals( nom)) {
                 closestDiff = Math.abs(diff);
                 m = M;
 
@@ -41,10 +48,12 @@ class BST {
 
     public static void removeMed(Medicament med){
         tree.remove(med);
+        setTree(tree);
     }
 
     public static void addMed(Medicament med){
         tree.add(med);
+        setTree(tree);
     }
 
     public static void removeAllExpired(LocalDate date){
