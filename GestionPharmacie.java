@@ -46,12 +46,12 @@ public class GestionPharmacie {
     boolean first = true;
 
     try {
-      reader = new BufferedReader(new FileReader("src/exemple4.txt"));
+      reader = new BufferedReader(new FileReader("exemple1.txt"));
       String line = reader.readLine();
       String instruction = "";
       ArrayList<String> commande = new ArrayList<String>();
       int i = 1;
-      BufferedWriter writer = new BufferedWriter(new FileWriter("src/exemple1+.txt"));
+      BufferedWriter writer = new BufferedWriter(new FileWriter("exemple1+.txt"));
 
       while (line != null) {
 
@@ -65,7 +65,7 @@ public class GestionPharmacie {
         }
         else if (line.contains("PRESCRIPTION")) {
           instruction = "PRESCRIPTION";
-          writer.write("\nPRESCRIPTION " + i + "\n");
+          writer.write("PRESCRIPTION " + i + "\n\n");
           i = i+1;
           line = reader.readLine();
         }
@@ -77,7 +77,7 @@ public class GestionPharmacie {
           dateLine = dateLine.replace(" ","");
 
           if (first == true){
-            writer.write(dateLine + "\tOK \n");
+            writer.write(dateLine + "\tOK \n\n");
             first = false;
           }
           dateLine = dateLine.replace("-",",");
@@ -90,7 +90,7 @@ public class GestionPharmacie {
           setCurrentDate (LocalDate.of(year,month,day));
           BST.removeAllExpired(LocalDate.of(year,month,day));
           if (commande.size() > 0) {
-            writer.write( "\n" + currentDate + "\tCOMMANDES :\n");
+            writer.write(currentDate + "\tCOMMANDES :\n\n");
             String element = BST.outputCommande(commande);
             writer.write(element);
             commande.clear();
@@ -120,10 +120,10 @@ public class GestionPharmacie {
           line = reader.readLine();
         }
         else if (instruction == "STOCK") {
-          writer.write("STOCK " + getCurrentDate() + "\n");
+          writer.write("STOCK " + getCurrentDate() + "\n\n");
           ArrayList<String> stock = BST.outputStock();
           for (int j=0; j<stock.size(); j++){
-            writer.write(stock.get(j) + "\n");
+            writer.write(stock.get(j) + "\n\n");
           }
           line = reader.readLine();
         }
