@@ -1,5 +1,3 @@
-// used https://www.programiz.com/dsa/binary-search-tree
-
 import java.io.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
