@@ -1,23 +1,28 @@
 // used https://www.programiz.com/dsa/binary-search-tree
 
+import java.io.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.TreeSet;
+import java.util.UUID;
 
 class BST {
 
-   public static  TreeSet<Medicament> tree = new TreeSet<Medicament>();
+    public static  TreeSet<Medicament> tree = new TreeSet<Medicament>();
 
-   public static TreeSet<Medicament> getTree() {
-       return tree;
-   }
+    public static TreeSet<Medicament> getTree() {
+        return tree;
+    }
+
 
     public static Medicament findClosest(String nom, LocalDate date) {
         Medicament m = null;
         long closestDiff = Long.MAX_VALUE;
         for (Medicament M : tree) {
             long diff = ChronoUnit.DAYS.between(M.getDateExpi(), date);
-            if (Math.abs(diff)<closestDiff && M.getNom().equals(nom)) {
+            if (Math.abs(diff)<closestDiff && M.getNom() == nom) {
                 closestDiff = Math.abs(diff);
                 m = M;
 
@@ -26,30 +31,131 @@ class BST {
     }
 
 
-    public static void outputStock(LocalDate date){
+    public static ArrayList<String> outputStock(){
+        ArrayList<String> medsStock =new ArrayList<String>();
         for (Medicament med:tree) {
-            if(med.getStock()>0 && med.getDateExpi().isAfter(date)){
-            System.out.println(med.getNom() + " " + med.getStock() + " " + med.getDateExpi());
-        }}
+            medsStock.add(med.getNom() + " " + med.getStock() + " " + med.getDateExpi());
+        }
+        return medsStock;
     }
 
     public static void removeMed(Medicament med){
-    tree.remove(med);
+        tree.remove(med);
     }
 
     public static void addMed(Medicament med){
         tree.add(med);
-        }
+    }
 
     public static void removeAllExpired(LocalDate date){
         tree.removeIf(mmm -> mmm.getDateExpi().isBefore(date));
     }
 
 
+////////////////////////////////////////////////////////////////////////
+    public static void stringToMed(String string){
+        String[] theLine = string.split(" ");
+        int num = Integer.parseInt(theLine[1]);
+        String date1 = theLine[2];
+        String[] date2 = date1.split("-");
+        int year = Integer.parseInt(date2[0]);
+        int month = Integer.parseInt(date2[1]);
+        int day = Integer.parseInt(date2[2]);
+        String med = theLine[0];
+        Medicament medicament = new Medicament(med,UUID.randomUUID(),LocalDate.of(year,month,day),num);
+        addMed(medicament);
+    }
+    public static void readTheThing() {
+        BufferedReader reader;
+
+        try {
+            reader = new BufferedReader(new FileReader("src/exemple1.txt"));
+            String line = reader.readLine();
+            String instruction = "";
+            int i = 1;
+            BufferedWriter writer = new BufferedWriter(new FileWriter("src/erm.txt"));
+            LocalDate date = LocalDate.of(2000,01,1);
+            ArrayList<String> meds = new ArrayList<String>();
+
+            while (line != null) {
+
+                if (line.equals(";")) {
+                    line = reader.readLine();
+                    continue;
+                }
+                else if (line.contains("APPROV")) {
+                    instruction = "APPROV";
+                    line = reader.readLine();
+                }
+                else if (line.contains("PRESCRIPTION")) {
+                    instruction = "PRESCRIPTION";
+                    writer.write("\nPRESCRIPTION " + i + "\n");
+                    i = i+1;
+                    line = reader.readLine();
+                }
+                else if (line.contains("DATE")) {
+                    String dateLine = line.replace("DATE ","");
+
+                    dateLine = dateLine.replace(";", "");
+
+                    dateLine = dateLine.replace(" ","");
+                    writer.write(dateLine + " OK \n");
+                    dateLine = dateLine.replace("-",",");
+
+                    String[] dateeLine = dateLine.split(",");
+                    int year = Integer.parseInt(dateeLine[0]);
+                    int month = Integer.parseInt(dateeLine[1]);
+                    int day = Integer.parseInt(dateeLine[2]);
+                    date = LocalDate.of(year,month,day);
+                    removeAllExpired(LocalDate.of(year,month,day));
+                    line = reader.readLine();
+                    instruction = "DATE";
+                }
+                else if (line.contains("STOCK")) {
+                    instruction = "STOCK";
+                }
+                if (instruction == "APPROV") {
+
+                    stringToMed(line);
+                    line = reader.readLine();
+                    if (line.equals("APPROV") || line.equals("PRESCRIPTION") || line.equals("DATE") || line.equals("STOCK")) {
+                        writer.write("APPROV OK\n");
+                    }
+
+                }
+                else if (instruction == "PRESCRIPTION") {
+                    String output = ClientPrescription.methodPrescription(line,date);
+                    writer.write(output + "\n");
+                    line = reader.readLine();
+                }
+                else if (instruction == "STOCK") {
+                    writer.write("\nSTOCK " + date + "\n");
+                    ArrayList<String> stock = outputStock();
+                    for (int j=0; j<stock.size(); j++){
+                        writer.write(stock.get(j) + "\n");
+                    }
+                    line = reader.readLine();
+                }
+                else if (instruction == "DATE"){
+                    continue;
+                }
+            }
+            writer.close();
+            reader.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+        //System.out.println(commande);
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public static void main(String[] args) {
         //BST tree = new BST();
-       
-        Medicament m1 = new Medicament("Med1", UUID.randomUUID(), LocalDate.of(2023, 7, 1),100);
+
+       /* Medicament m1 = new Medicament("Med1", UUID.randomUUID(), LocalDate.of(2023, 7, 1),100);
         Medicament m2 = new Medicament("Med2", UUID.randomUUID(), LocalDate.of(2023, 7, 2),100);
         Medicament m3 = new Medicament("Med3", UUID.randomUUID(), LocalDate.of(2023, 7, 3),100);
         Medicament m4 = new Medicament("Med4", UUID.randomUUID(), LocalDate.of(2023, 7, 4),200);
@@ -69,15 +175,15 @@ class BST {
 
         System.out.println("Inorder traversal (sorted by expiration date):");
         //tree.inorder();
-       outputStock(LocalDate.of(2023,12,12));
+        outputStock();
 
         Medicament m = findClosest("Med4", LocalDate.of(2023, 7, 3));
         System.out.println("Output: " + m.getNom() + " " + m.getStock() + " " + m.getDateExpi());
 
-       Medicament newm = new Medicament (m.getNom(), m.getUUID(),m.getDateExpi(), m.getStock()-50);
-       //Medicament newm1 = new Medicament (m1.getNom(), m1.getUUID(),m1.getDateExpi(), m1.getStock()-50);
-       removeMed(m);
-       //tree.remove(m1);
+        Medicament newm = new Medicament (m.getNom(), m.getUUID(),m.getDateExpi(), m.getStock()-50);
+        //Medicament newm1 = new Medicament (m1.getNom(), m1.getUUID(),m1.getDateExpi(), m1.getStock()-50);
+        removeMed(m);
+        //tree.remove(m1);
         //System.gc();
         addMed(newm);
         //tree.add(newm1);
@@ -94,18 +200,18 @@ class BST {
         deleteNodesBeforeDate(LocalDate.of(2023, 7, 5));*/
 
 
-        System.out.println("Inorder traversal (sorted by expiration date):");
+        /*System.out.println("Inorder traversal (sorted by expiration date):");
         //tree.inorder();
         /*Medicament newm1 = new Medicament (m1.getNom(), m1.getUUID(),LocalDate.of(2023, 7, 15), m1.getStock()+1000);
         tree.add(newm1);*/
-        removeMed(m1);
+        //removeMed(m1);
         //removeBeforeDate(tree, LocalDate.of(2023, 7, 4 ));
-       removeAllExpired(LocalDate.of(2023, 7, 4 ));
+        /*removeAllExpired(LocalDate.of(2023, 7, 4 ));
         for (Medicament med:tree) {
             System.out.println(med.getNom() + " " + med.getStock() + " " + med.getDateExpi());
-        }
+        }*/
+        readTheThing();
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
     }
 }
 
