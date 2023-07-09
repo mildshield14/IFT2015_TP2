@@ -48,12 +48,12 @@ public class GestionPharmacie {
     boolean first = true;
 
     try {
-      reader = new BufferedReader(new FileReader("src/exemple1.txt"));
+      reader = new BufferedReader(new FileReader("exemple1.txt"));
       String line = reader.readLine();
       String instruction = "";
       ArrayList<String> commande = new ArrayList<String>();
       int i = 1;
-      BufferedWriter writer = new BufferedWriter(new FileWriter("src/exemple1+.txt"));
+      BufferedWriter writer = new BufferedWriter(new FileWriter("exemple1+.txt"));
 
       while (line != null) {
         if (line.equals(";") && instruction == "PRESCRIPTION") {

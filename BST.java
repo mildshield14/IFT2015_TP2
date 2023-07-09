@@ -102,68 +102,30 @@ class BST {
      if the object is not contained in the tree.
      @param obj the object to remove
      */
-    public static void remove(Comparable obj)
-    {
-        // Find node to be removed
+    private static Node removeNode(Node node, Comparable obj) {
+        if (node == null) {
+            return null;
+        }
 
-        Node toBeRemoved = root;
-        Node parent = null;
-        boolean found = false;
-        while (!found && toBeRemoved != null)
-        {
-            int d = toBeRemoved.data.compareTo(obj);
-            if (d == 0) found = true;
-            else
-            {
-                parent = toBeRemoved;
-                if (d > 0) toBeRemoved = toBeRemoved.left;
-                else toBeRemoved = toBeRemoved.right;
+        int comp = obj.compareTo(node.data);
+        if (comp < 0) {
+            node.left = removeNode(node.left, obj);
+        } else if (comp > 0) {
+            node.right = removeNode(node.right, obj);
+        } else {
+            // Node to be removed found
+            if (node.left == null) {
+                return node.right;
+            } else if (node.right == null) {
+                return node.left;
+            } else {
+                Node successor = findSuccessor(node.right);
+                node.data = successor.data;
+                node.right = removeNode(node.right, successor.data);
             }
         }
 
-        if (!found) return;
-
-        // toBeRemoved contains obj
-
-        // If one of the children is empty, use the other
-
-        if (toBeRemoved.left == null || toBeRemoved.right == null)
-        {
-            Node newChild;
-            if (toBeRemoved.left == null)
-                newChild = toBeRemoved.right;
-            else
-                newChild = toBeRemoved.left;
-
-            if (parent == null) // Found in root
-                root = newChild;
-            else if (parent.left == toBeRemoved)
-                parent.left = newChild;
-            else
-                parent.right = newChild;
-            return;
-        }
-
-
-        // Find smallest element of the right subtree
-
-        Node smallestParent = toBeRemoved;
-        Node smallest = toBeRemoved.right;
-        while (smallest.left != null)
-        {
-            smallestParent = smallest;
-            smallest = smallest.left;
-        }
-
-        // smallest contains smallest child in right subtree
-
-        // Move contents, unlink child
-
-        toBeRemoved.data = smallest.data;
-        if (smallestParent == toBeRemoved)
-            smallestParent.right = smallest.right;
-        else
-            smallestParent.left = smallest.right;
+        return node;
     }
 
 
@@ -309,7 +271,9 @@ return medsStock;
         tree.remove(med);
         setTree(tree);
     }
-
+    public void remove(Comparable obj) {
+        root = removeNode(root, obj);
+    }
     public static void addMed(Medicament med){
 
         BST tree = getTree();
