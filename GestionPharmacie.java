@@ -31,35 +31,35 @@ public class GestionPharmacie {
     String med = parts[0];
 
     Medicament medicament = new Medicament(med,UUID.randomUUID(),date,num);
-    Medicament medoc = BST.search(medicament);
+    Medicament medoc = BST.searchMed(medicament);
     if (medoc != null) {
-      medoc.setStock(medoc.getStock()+ num);
-      BST.add(medoc);
+     medoc.setStock(medoc.getStock()+ num);
+     BST.addMed(medoc);
     }
     else{
-      BST.add(medicament);
+      BST.addMed(medicament);
     }
 
   }
-
-
   public static void readTheThing() {
     BufferedReader reader;
     boolean first = true;
 
     try {
-      reader = new BufferedReader(new FileReader("exemple1.txt"));
+      reader = new BufferedReader(new FileReader("src/exemple6.txt"));
       String line = reader.readLine();
       String instruction = "";
       ArrayList<String> commande = new ArrayList<String>();
       int i = 1;
-      BufferedWriter writer = new BufferedWriter(new FileWriter("exemple1+.txt"));
+      BufferedWriter writer = new BufferedWriter(new FileWriter("src/exemple6+.txt"));
 
       while (line != null) {
-        if (line.equals(";") && instruction == "PRESCRIPTION") {
+
+        if (line.equals(";")&& instruction.equals("PRESCRIPTION")){
           writer.write("\n");
         }
-        if (line.equals(";")) {
+
+        if (line.equals(";")){
           line = reader.readLine();
           continue;
         }
@@ -81,7 +81,7 @@ public class GestionPharmacie {
           dateLine = dateLine.replace(" ","");
 
           if (first == true){
-            writer.write(dateLine + "\tOK \n");
+            writer.write(dateLine + "\tOK \n\n");
             first = false;
           }
           dateLine = dateLine.replace("-",",");
@@ -92,7 +92,8 @@ public class GestionPharmacie {
           int day = Integer.parseInt(dateeLine[2]);
 
           setCurrentDate (LocalDate.of(year,month,day));
-          BST.removeAllExpired(LocalDate.of(year,month,day));
+          BST.removeAllExpired(getCurrentDate());
+          System.out.println(getCurrentDate());
           if (commande.size() > 0) {
             writer.write(currentDate + "\tCOMMANDES :\n");
             String element = BST.outputCommande(commande);
@@ -124,6 +125,7 @@ public class GestionPharmacie {
           line = reader.readLine();
         }
         else if (instruction == "STOCK") {
+
           writer.write("STOCK " + getCurrentDate() + "\n");
           ArrayList<String> stock = BST.outputStock();
           for (int j=0; j<stock.size(); j++){
@@ -183,14 +185,13 @@ public class GestionPharmacie {
       outputstring=(med + "\t" + num1 + "\t"+ num2 +"\t"+ "COMMANDE");
     } else if (foundMed !=null && foundMed.getStock()>=total){
 
-      BST.remove(foundMed);
+      BST.removeMed(foundMed);
 
       foundMed.setStock(foundMed.getStock()-total);
 
-      BST.add(foundMed);
+      BST.addMed(foundMed);
       outputstring=(med + "\t" + num1 + "\t"+ num2 +"\t"+ "OK");
     }else if (foundMed ==null){
-      System.out.println(med + "\t" + total + " stock needed" +"\t" + " does not exist??");
       outputstring=(med + "\t" + num1 + "\t"+ num2 +"\t"+ "COMMANDE");
     }
 
@@ -199,10 +200,8 @@ public class GestionPharmacie {
 
   }
 
-
-
   public static void main(String[] args) {
-   // BST.firsttime();
+    BST.firsttime();
     readTheThing();
     // Lire le fichier (donnees en fichier en désordre; chercher les keywords)
     // Entrer les donnees dans les structures
@@ -222,3 +221,4 @@ public class GestionPharmacie {
     //           until EOF
   }
 }
+
