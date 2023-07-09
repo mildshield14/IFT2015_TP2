@@ -1,135 +1,47 @@
+import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
-public class BST {
-    private static Node root;
+class BST {
 
-    public static Node getRoot() {
-        return root;
+    protected static  TreeSet<Medicament> tree;
+
+    public static TreeSet<Medicament> getTree() {
+        return tree;
     }
 
-    public static void add(Medicament med) {
-        root = addNode(root, med);
+    public static void setTree(TreeSet<Medicament> tree) {
+        BST.tree = tree;
     }
 
-    private static Node addNode(Node node, Medicament med) {
-        if (node == null) {
-            return new Node(med);
-        }
-
-        int compareResult = med.compareTo(node.data);
-        if (compareResult < 0) {
-            node.left = addNode(node.left, med);
-        } else if (compareResult > 0) {
-            node.right = addNode(node.right, med);
-        }
-
-        return node;
-    }
-
-    public static void remove(Medicament med) {
-        root = removeNode(root, med);
-    }
-
-    private static Node removeNode(Node node, Medicament med) {
-        if (node == null) {
-            return null;
-        }
-
-        int compareResult = med.compareTo(node.data);
-        if (compareResult < 0) {
-            node.left = removeNode(node.left, med);
-        } else if (compareResult > 0) {
-            node.right = removeNode(node.right, med);
-        } else {
-            if (node.left == null) {
-                return node.right;
-            } else if (node.right == null) {
-                return node.left;
-            } else {
-                Node successor = findSuccessor(node.right);
-                node.data = successor.data;
-                node.right = removeNode(node.right, successor.data);
-            }
-        }
-
-        return node;
-    }
-
-    private static Node findSuccessor(Node node) {
-        while (node.left != null) {
-            node = node.left;
-        }
-        return node;
+    public static void firsttime (){
+        tree= new TreeSet<Medicament>();
     }
 
     public static Medicament findClosest(String nom, LocalDate date) {
-        return findClosestNode(root, nom, date);
-    }
+        Medicament m = null;
+        long closestDiff = Long.MAX_VALUE;
+        for (Medicament M : tree) {
+            long diff = ChronoUnit.DAYS.between(M.getDateExpi(), date);
+            if (Math.abs(diff)<=closestDiff && M.getNom().equals( nom)) {
+                closestDiff = Math.abs(diff);
+                m = M;
 
-    private static Medicament findClosestNode(Node node, String nom, LocalDate date) {
-        if (node == null) {
-            return null;
-        }
-
-        Medicament currentMed = node.data;
-        if (currentMed.getNom().equals(nom)) {
-            return currentMed;
-        }
-
-        long diff = Math.abs(date.toEpochDay() - currentMed.getDateExpi().toEpochDay());
-        long closestDiff = Math.abs(date.toEpochDay() - currentMed.getDateExpi().toEpochDay());
-
-        Medicament closestMed = null;
-
-        if (diff < 0) {
-            Medicament leftClosest = findClosestNode(node.left, nom, date);
-            if (leftClosest != null) {
-                long leftDiff = Math.abs(date.toEpochDay() - leftClosest.getDateExpi().toEpochDay());
-                if (leftDiff < closestDiff) {
-                    closestDiff = leftDiff;
-                    closestMed = leftClosest;
-                }
             }
-        } else if (diff > 0) {
-            Medicament rightClosest = findClosestNode(node.right, nom, date);
-            if (rightClosest != null) {
-                long rightDiff = Math.abs(date.toEpochDay() - rightClosest.getDateExpi().toEpochDay());
-                if (rightDiff > closestDiff) {
-                    closestDiff = rightDiff;
-                    closestMed = rightClosest;
-                }
-            }
+        } return m;
+    }
+
+    public static ArrayList<String> outputStock(){
+        ArrayList<String> medsStock =new ArrayList<String>();
+        for (Medicament med:tree) {
+            medsStock.add(med.getNom() + "\t" + med.getStock() + "\t" + med.getDateExpi());
         }
-
-        return closestMed;
+        Collections.sort(medsStock);
+        return medsStock;
     }
 
-    public static ArrayList<String> outputStock() {
-        ArrayList<String> stock = new ArrayList<>();
-        outputStockInOrder(root, stock);
-        return stock;
-    }
 
-    private static void outputStockInOrder(Node node, ArrayList<String> stock) {
-        if (node == null) {
-            return;
-        }
-
-        outputStockInOrder(node.left, stock);
-        stock.add(node.data.getNom() + "\t" + node.data.getStock() + "\t" + node.data.getDateExpi());
-        outputStockInOrder(node.right, stock);
-    }
-
-    public static void removeAllExpired(LocalDate date) {
-        root = removeAllExpiredNodes(root, date);
-    }
-
-    public static Medicament search(Medicament med) {
-        return searchNode(root, med);
-    }
     public static String outputCommande(ArrayList<String> commande){
 
         ArrayList<String> medsStock =new ArrayList<String>();
@@ -143,66 +55,123 @@ public class BST {
             }
 
             int num1 = Integer.parseInt(parts[1]);
-    int num2 = Integer.parseInt(parts[2]);
-    String med = parts[0];
+            int num2 = Integer.parseInt(parts[2]);
+            String med = parts[0];
 
-    int total = num1 * num2;
-    String output = med + "\t" + total;
-    //medsStock.add(output);
+            int total = num1 * num2;
+            String output = med + "\t" + total;
+            //medsStock.add(output);
 
             if (stock.containsKey(med)) {
-        int stock2 = stock.get(med);
-        stock.put(med, stock2+total);
-    }
+                int stock2 = stock.get(med);
+                stock.put(med, stock2+total);
+            }
             else {
-        stock.put(med, total);
-    }
-}
-    String output = "";
-        for (Map.Entry<String, Integer> entry : stock.entrySet()) {
-        output = output + entry.getKey() + " " + entry.getValue() + "\n";
+                stock.put(med, total);
+            }
         }
+        List<String> keys = new ArrayList<>(stock.keySet());
+        Collections.sort(keys);
+        String output = "";
+        for (String key : keys) {
+            output = output + (key + "\t" + stock.get(key) + "\n");
+        }
+
+
         output = output + "\n";
         return output;
-        }
-
-    private static Medicament searchNode(Node node, Medicament med) {
-        if (node == null) {
-            return null;
-        }
-
-        int compareResult = med.compareTo(node.data);
-        if (compareResult == 0) {
-            return node.data;
-        } else if (compareResult < 0) {
-            return searchNode(node.left, med);
-        } else {
-            return searchNode(node.right, med);
-        }
     }
 
-    private static Node removeAllExpiredNodes(Node node, LocalDate date) {
-        if (node == null) {
-            return null;
-        }
-
-        node.left = removeAllExpiredNodes(node.left, date);
-        node.right = removeAllExpiredNodes(node.right, date);
-
-        if (node.data.getDateExpi().isBefore(date)) {
-            node = removeNode(node, node.data);
-        }
-
-        return node;
+    public static void removeMed(Medicament med){
+        tree.remove(med);
+        setTree(tree);
     }
-    private static class Node {
-        private Medicament data;
-        private Node left;
-        private Node right;
 
-        private Node(Medicament data) {
-            this.data = data;
-        }
+    public static void addMed(Medicament med){
+        tree.add(med);
+        setTree(tree);
+    }
+
+    public static void removeAllExpired(LocalDate date){
+
+        tree.removeIf(mmm -> mmm.getDateExpi().isBefore(date));
+
+        tree.removeIf(mmm -> mmm.getDateExpi().isEqual(date));
+    }
+
+    public static Medicament searchMed(Medicament med) {
+
+            for (Medicament medicament:tree) {
+                if (med.getNom().equals(medicament.getNom()) && med.getDateExpi().equals(medicament.getDateExpi())){
+
+                    return medicament;
+                }
+            }
+        return null;
+    }
+
+    public static void main(String[] args) {
+
+        //BST tree = new BST();
+
+       /* Medicament m1 = new Medicament("Med1", UUID.randomUUID(), LocalDate.of(2023, 7, 1),100);
+        tree.contains(m1.getNom());
+        Medicament m2 = new Medicament("Med2", UUID.randomUUID(), LocalDate.of(2023, 7, 2),100);
+        Medicament m3 = new Medicament("Med3", UUID.randomUUID(), LocalDate.of(2023, 7, 3),100);
+        Medicament m4 = new Medicament("Med4", UUID.randomUUID(), LocalDate.of(2023, 7, 4),200);
+        Medicament m5 = new Medicament("Med5", UUID.randomUUID(), LocalDate.of(2023, 7, 5),100);
+        Medicament m6 = new Medicament("Med4", UUID.randomUUID(), LocalDate.of(2023, 7, 5),350);
+        Medicament m7 = new Medicament("Med4", UUID.randomUUID(), LocalDate.of(2023, 7, 10),450);
+        //ArrayList<Medicament> ee = new ArrayList<>();
+        //ee = new Collection<Medicament>();
+        addMed(m5);
+        addMed(m3);
+        addMed(m4);
+        addMed(m1);
+        addMed(m2);
+        addMed(m6);
+        addMed(m7);
+        //tree.addAll(ee);
+
+        System.out.println("Inorder traversal (sorted by expiration date):");
+        //tree.inorder();
+        outputStock();
+
+        Medicament m = findClosest("Med4", LocalDate.of(2023, 7, 3));
+        System.out.println("Output: " + m.getNom() + " " + m.getStock() + " " + m.getDateExpi());
+
+        Medicament newm = new Medicament (m.getNom(), m.getUUID(),m.getDateExpi(), m.getStock()-50);
+        //Medicament newm1 = new Medicament (m1.getNom(), m1.getUUID(),m1.getDateExpi(), m1.getStock()-50);
+        removeMed(m);
+        //tree.remove(m1);
+        //System.gc();
+        addMed(newm);
+        //tree.add(newm1);
+        //System.gc();
+        Medicament m11 = new Medicament("",UUID.randomUUID(),LocalDate.of(2023, 7, 1),100);
+        m11 = findClosest("Med4",LocalDate.of(2023, 7, 3));
+        System.out.println("Output: " + m11.getNom() + " " + m11.getStock() + " " + m11.getDateExpi());
+        //int size = tree.size();
+        //tree.inorder();
+        /*for (int i=0; i<size*size; i++) {
+            deleteNodesBeforeDate(LocalDate.of(2023, 7, 3));
+        }*/
+        /*deleteNodesBeforeDate(LocalDate.of(2023, 7, 5));
+        deleteNodesBeforeDate(LocalDate.of(2023, 7, 5));*/
+
+
+        /*System.out.println("Inorder traversal (sorted by expiration date):");
+        //tree.inorder();
+        /*Medicament newm1 = new Medicament (m1.getNom(), m1.getUUID(),LocalDate.of(2023, 7, 15), m1.getStock()+1000);
+        tree.add(newm1);*/
+        //removeMed(m1);
+        //removeBeforeDate(tree, LocalDate.of(2023, 7, 4 ));
+        /*removeAllExpired(LocalDate.of(2023, 7, 4 ));
+        for (Medicament med:tree) {
+            System.out.println(med.getNom() + " " + med.getStock() + " " + med.getDateExpi());
+        }*/
+
     }
 }
+
 
