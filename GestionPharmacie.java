@@ -31,15 +31,15 @@ public class GestionPharmacie {
     String med = parts[0];
 
     Medicament medicament = new Medicament(med,UUID.randomUUID(),date,num);
-    Medicament medoc = BST.searchTraverse(BST.getRoot(), medicament);
+    Medicament medoc = BST.search(medicament);
     if (medoc != null) {
       medoc.setStock(medoc.getStock()+ num);
-      BST.addMed(medoc);
+      BST.add(medoc);
     }
     else{
-      BST.addMed(medicament);
+      BST.add(medicament);
     }
-    BST.Node r= BST.getRoot();
+
   }
 
 
@@ -92,7 +92,7 @@ public class GestionPharmacie {
           int day = Integer.parseInt(dateeLine[2]);
 
           setCurrentDate (LocalDate.of(year,month,day));
-          BST.removeExpiredNodes(BST.getRoot(),LocalDate.of(year,month,day));
+          BST.removeAllExpired(LocalDate.of(year,month,day));
           if (commande.size() > 0) {
             writer.write(currentDate + "\tCOMMANDES :\n");
             String element = BST.outputCommande(commande);
@@ -183,11 +183,11 @@ public class GestionPharmacie {
       outputstring=(med + "\t" + num1 + "\t"+ num2 +"\t"+ "COMMANDE");
     } else if (foundMed !=null && foundMed.getStock()>=total){
 
-      BST.removeMed(foundMed);
+      BST.remove(foundMed);
 
       foundMed.setStock(foundMed.getStock()-total);
 
-      BST.addMed(foundMed);
+      BST.add(foundMed);
       outputstring=(med + "\t" + num1 + "\t"+ num2 +"\t"+ "OK");
     }else if (foundMed ==null){
       System.out.println(med + "\t" + total + " stock needed" +"\t" + " does not exist??");
@@ -202,7 +202,7 @@ public class GestionPharmacie {
 
 
   public static void main(String[] args) {
-    BST.firsttime();
+   // BST.firsttime();
     readTheThing();
     // Lire le fichier (donnees en fichier en désordre; chercher les keywords)
     // Entrer les donnees dans les structures

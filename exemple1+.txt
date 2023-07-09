@@ -1,6 +1,7 @@
 APPROV OK
 2017-10-26	OK 
 STOCK 2017-10-26
+Medicament5	10	2018-05-27
 Medicament1	120	2018-05-29
 
 PRESCRIPTION 1
@@ -22,6 +23,7 @@ Medicament1	4	1	OK
 Medicament2	3	12	COMMANDE
 
 STOCK 2017-10-26
+Medicament5	10	2018-05-27
 Medicament1	80	2018-05-29
 
 2017-10-27	COMMANDES :
@@ -33,6 +35,7 @@ Medicament9 4
 
 APPROV OK
 STOCK 2017-10-27
-Medicament1	80	2018-05-29
+Medicament5	10	2018-05-27
 Medicament4	8	2017-10-30
+Medicament1	80	2018-05-29
 
