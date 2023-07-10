@@ -9,9 +9,7 @@ class Medicament implements Comparable<Medicament> {
 
     @Override
     public int compareTo(Medicament m) {
-
         return this.uuid.compareTo(m.getUUID());
-
     }
    public Medicament(String nom, UUID uuid, LocalDate dateExpi, int stock){
         this.nom=nom;
