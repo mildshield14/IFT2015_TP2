@@ -53,21 +53,21 @@ class BST {
             medsStock.add(med.getNom() + "\t" + med.getStock() + "\t" + med.getDateExpi());
         }
         Collections.sort(medsStock);
-//        // on utilise cette methode afin de permettre et un sort sur le nom puis si e nom est pareil,
-//        // un sort sur la date (exprssion lambda suggeré par IntelliJ)
-//        Collections.sort(medsStock, (med1, med2) -> {
-//            String[] med1Parts = med1.split("\t");
-//            String[] med2Parts = med2.split("\t");
-//
-//            // Compare names
-//            int nameComparison = med1Parts[0].compareTo(med2Parts[0]);
-//            if (nameComparison != 0) {
-//                return nameComparison;
-//            }
-//
-//            // If names are the same, compare dates
-//            return med1Parts[2].compareTo(med2Parts[2]);
-//        });
+        // on utilise cette methode afin de permettre et un sort sur le nom puis si e nom est pareil,
+        // un sort sur la date (exprssion lambda suggeré par IntelliJ)
+        Collections.sort(medsStock, (med1, med2) -> {
+            String[] med1Parts = med1.split("\t");
+            String[] med2Parts = med2.split("\t");
+
+            // Compare names
+            int nameComparison = med1Parts[0].compareTo(med2Parts[0]);
+            if (nameComparison != 0) {
+                return nameComparison;
+            }
+
+            // If names are the same, compare dates
+            return med1Parts[2].compareTo(med2Parts[2]);
+        });
 
         return medsStock;
     }
