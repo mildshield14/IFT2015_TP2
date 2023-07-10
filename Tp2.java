@@ -1,3 +1,7 @@
+// Absalon Marion (20211423) et Sooben Vennila (20235256)
+// IFT 2015 - TP2
+// Gestion Pharmacie
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -16,17 +20,17 @@ public class Tp2 {
 
 
   // cette méthode va effectuer la lecture du fichier ainsi que l'ecriture
-  public static void readTheThing() {
+  public static void readTheThing(String read, String write) {
     BufferedReader reader;
     boolean first = true;
 
     try {
-      reader = new BufferedReader(new FileReader("exemple1.txt"));
+      reader = new BufferedReader(new FileReader(read));
       String line = reader.readLine();
       String instruction = "";
 
       int i = 1;
-      BufferedWriter writer = new BufferedWriter(new FileWriter("exemple1+.txt"));
+      BufferedWriter writer = new BufferedWriter(new FileWriter(write));
 
       while (line != null) {
 
@@ -252,7 +256,7 @@ public class Tp2 {
     //           au prochain DATE, juste avant, output RECORD. Juste apres, deleteAll.
     //           until EOF
       BST.firsttime();
-      readTheThing();
+      readTheThing(args[0], args[1]);
   }
 }
 
