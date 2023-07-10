@@ -256,7 +256,7 @@ public class Tp2 {
     //           au prochain DATE, juste avant, output RECORD. Juste apres, deleteAll.
     //           until EOF
       BST.firsttime();
-      readAndWrite("args[0]", "args[1]");
+      readAndWrite(args[0], args[1]);
   }
 }
 
