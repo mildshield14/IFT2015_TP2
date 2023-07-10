@@ -20,7 +20,7 @@ public class Tp2 {
 
 
   // cette méthode va effectuer la lecture du fichier ainsi que l'ecriture
-  public static void readTheThing(String read, String write) {
+  public static void readAndWrite(String read, String write) {
     BufferedReader reader;
     boolean first = true;
 
@@ -256,7 +256,7 @@ public class Tp2 {
     //           au prochain DATE, juste avant, output RECORD. Juste apres, deleteAll.
     //           until EOF
       BST.firsttime();
-      readTheThing("/Users/vennilasooben/Downloads/tests/exemple1.txt", "/Users/vennilasooben/Downloads/tests/test1.txt");
+      readAndWrite("args[0]", "args[1]");
   }
 }
 
