@@ -38,7 +38,7 @@ public class Tp2 {
           writer.write("\n");
         }
 
-        if (line.contains(";") || line.equals("")){
+        if (line.equals(";") || line.equals("")){
           line = reader.readLine();
           continue;
         }
@@ -256,7 +256,7 @@ public class Tp2 {
     //           au prochain DATE, juste avant, output RECORD. Juste apres, deleteAll.
     //           until EOF
       BST.firsttime();
-      readTheThing(args[0], args[1]);
+      readTheThing("/Users/vennilasooben/Downloads/tests/exemple1.txt", "/Users/vennilasooben/Downloads/tests/test1.txt");
   }
 }
 
