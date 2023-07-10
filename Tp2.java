@@ -144,7 +144,7 @@ public class Tp2 {
     String med = parts[0];
 
     int total = num1*num2;
-    BST.outputStock();
+   // BST.outputStock();
     Medicament foundMed = BST.findClosest(med,date, total);
 
 
